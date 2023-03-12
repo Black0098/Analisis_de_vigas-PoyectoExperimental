@@ -10,8 +10,8 @@ v_cortantes = []                                # Vector para la los cortantes
 eitetha = []                                    #Vector para las pendientes ssssss
 tetha = []                          
 eideflexiones = []
-elm = 10000
-delt = 0.0001
+elm = 1000
+delt = 0.001
 
 print('Ingrese la longitud de la viga:')
 L = float(input(""))
