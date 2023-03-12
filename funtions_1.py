@@ -71,16 +71,16 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     Rectangles = int(abs(LR[int(xb*elm)-1]*elm-LR[int(xa*elm)-1]*elm))
 
     if xa == 0:
-        Rectangles = int(abs(LR[int(xb*elm)-1]*elm-LR[int(xa*elm)]*elm))
+        Rectangles = int(abs(LR[int(xb*elm)-1]*elm-LR[int(xa*elm)]*elm))+1
 
     dx = (b - a) / Rectangles
-    x = np.linspace(a, b - dx, Rectangles+1)
+    x = np.linspace(a, b, Rectangles)
     y = []
     y.append(eval(y2))                              #Evaluar la funcion
 
 
     if (type(y[0]) == int)|(type(y[0]) == float):
-        y = np.repeat(y,Rectangles+1)
+        y = np.repeat(y,Rectangles)
         Cargas_puntuales = y * dx
     else:
             Cargas_puntuales = y[0] * dx
@@ -93,7 +93,8 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
         k+=1
 
     area = sum(Cargas_puntuales)
-    Qy = integrate.trapz(np.multiply(x,Cargas_puntuales), x)*elm
+    distancia = np.linspace(0, b-a, Rectangles)
+    Qy = integrate.trapz(np.multiply(distancia,Cargas_puntuales), distancia)*elm
     return Qy , area
 
 def Momentos_f(elm,momentums):                                  ##Vector de momentos puntuales       s

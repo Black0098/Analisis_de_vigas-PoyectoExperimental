@@ -169,5 +169,3 @@ ax4.plot(LR, deflexiones, color = "blue")
 ax4.set_title("Momentos flectores")
 
 plt.show()
-
-print("este es un cambio")
