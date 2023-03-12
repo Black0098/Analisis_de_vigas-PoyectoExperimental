@@ -7,7 +7,7 @@ from funtions_1 import *
 Qys = []                                        # Vector para los primeros momentos de area 
 coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
 v_cortantes = []                                # Vector para la los cortantes 
-eitetha = []                                    #Vector para las pendientes ss
+eitetha = []                                    #Vector para las pendientes ssssss
 tetha = []                          
 eideflexiones = []
 elm = 1000

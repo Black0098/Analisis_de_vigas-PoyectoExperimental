@@ -30,7 +30,7 @@ def Xel_total(Qys, Vpc):                                        ##Coordenada del
     Xel= a/b
     return Xel
 
-def apoyos():                                                   ##Apoyos de la barra                 
+def apoyos():                                                   ##Apoyos de la barra    sss             
     print('Ingrese la posicion del primer apoyo:')
     Aa = float(input(""))
     print('Ingrese la posicion del segundo apoyo:')
