@@ -118,7 +118,7 @@ else:
     c1 = np.repeat(2000*2070000000000*pendi-eitetha[int((Aa*elm))-1],len(eitetha))
 ##
 print(c1[0])
-tetha = (eitetha+c1)*(1/(2000*2070000000000))
+tetha = (eitetha+c1)*(1/(2000*2070000000000))/elm
 #hacerlo para las tres secciones 
 
 #deflexiones--------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ eideflexiones = integrar_num(eideflexiones, Vpc, tetha)
 
 c2 = np.repeat(-eideflexiones[int((Ab*elm))-1],len(eideflexiones))  
 
-deflexiones = (eideflexiones+c2)
+deflexiones = (eideflexiones+c2)/elm
 
 
 
