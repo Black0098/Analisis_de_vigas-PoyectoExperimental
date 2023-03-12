@@ -2,27 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
 
-"""def centroide (w, W_eq, l):
-    y = w
-    A = W_eq
-    Qy = smp.integrate(x*y,(x,0,l)).simplify() #Coordenada en X
-    X_dis = Qy/A
-    print("La coordenada en x del centroide es {}". format(X_dis))
-    return X_dis
-
-def reaciones (carga_tot, xel,Xa,momentums,Xb):
-    R2 = (carga_tot*(xel-Xa)-sum(momentums)) / (Xb-Xa)
-    R1 = carga_tot - R2
-    print("La reaccion en el primer apoyo es: {}".format(R1))
-    print("La reaccion en el segundo apoyo es: {}".format(R2))
-    return R1, R2
-"""
-"""def distribuidas(c, area, xa, xb, rec, dx ,x):
-    #dx = (xb-xa)/rec
-    #Qy = sum(c)*(xb-xa)
-    #Qy = sum(c*dx)
-    Qy = integrate.trapz(np.multiply(x,c), x)*1000
-    return area , Qy"""
 
 def Xel_total(Qys, Vpc):                                        ##Coordenada del centriode general   
     a = sum(Qys)
