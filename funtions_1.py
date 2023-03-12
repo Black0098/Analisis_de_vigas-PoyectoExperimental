@@ -74,7 +74,7 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
         k+=1
 
     area = sum(Cargas_puntuales)
-    distancia = np.linspace(0, b-a, Rectangles)
+    distancia = np.linspace(xa, xb, Rectangles)
     Qy = integrate.trapz(np.multiply(distancia,Cargas_puntuales), distancia)*elm
     return Qy , area
 
