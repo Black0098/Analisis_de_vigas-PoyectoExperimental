@@ -76,7 +76,9 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     dx = (b - a) / Rectangles
     x = np.linspace(a, b, Rectangles)
     y = []
-    y.append(eval(y2))                              #Evaluar la funcion
+
+    op = {'sin': np.sin, 'cos': np.cos, 'x': x, 'exp': np.exp, 'pi': np.pi}
+    y.append(eval(y2, op))                              #Evaluar la funcion
 
 
     if (type(y[0]) == int)|(type(y[0]) == float):

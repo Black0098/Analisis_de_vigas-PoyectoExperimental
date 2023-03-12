@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
-from math import sin, cos
                                  
 Qys = []                                        # Vector para los primeros momentos de area 
 coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
@@ -11,8 +10,8 @@ v_cortantes = []                                # Vector para la los cortantes
 eitetha = []                                    #Vector para las pendientes ssssss
 tetha = []                          
 eideflexiones = []
-elm = 1000
-delt = 0.001
+elm = 10000
+delt = 0.0001
 
 print('Ingrese la longitud de la viga:')
 L = float(input(""))
