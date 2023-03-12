@@ -70,7 +70,7 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     k = 0
 
     while k<len(Cargas_puntuales)-1:
-        Vpc[j+k] = Vpc[j+k] + Cargas_puntuales[k]
+        Vpc[j+k] += Cargas_puntuales[k]
         k+=1
 
     area = sum(Cargas_puntuales)

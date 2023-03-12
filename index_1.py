@@ -135,7 +135,7 @@ print(c2[0])
 print(deflexiones)
 
 #Grafico de cargas--------------------------------------------------------------------------------------------------------------------
-print("prueba_Sync_3")
+print("prueba_Sync_3." , sum(Vpc))
 
 # Magnitud del vector
 x = 0
