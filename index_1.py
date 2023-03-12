@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
+from math import sin, cos
                                  
 Qys = []                                        # Vector para los primeros momentos de area 
 coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
