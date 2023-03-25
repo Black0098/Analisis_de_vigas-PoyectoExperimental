@@ -7,12 +7,12 @@ from funtions_1 import *
 Qys = []                                        # Vector para los primeros momentos de area 
 coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
 v_cortantes = []                                # Vector para la los cortantes 
-eitetha = []                                    #Vector para las pendientes ssssss
-tetha = []                          
+eitetha = []                                    # V ector para las Pen_refentes ssssss                        
 eideflexiones = []
 elm = 1000
 delt = 0.001
-
+E = 10000000                                    # Modulo de elasticidad 
+I = 10                                          # Momento de inercia
 print('Ingrese la longitud de la viga:')
 L = float(input(""))
 LR = np.arange(0 ,L ,delt)
@@ -78,7 +78,7 @@ else:
 
 #cortantes y flectores----------------------------------------------------------------------------------------------------------------
 
-v_cortantes = integrar_num(v_cortantes , Vpc,tetha)
+v_cortantes = integrar_num(v_cortantes , Vpc)
 
 
 m_flectores = np.repeat(float(0),len(Vpc))
@@ -97,33 +97,33 @@ print(df)
 print(df.iloc[:, 0:3])
 print(df.iloc[1,2])
 
-#pendientes---------------------------------------------------------------------------------------------------------------------------
-eitetha = integrar_num(eitetha , m_flectores, tetha)
+#Pen_refentes---------------------------------------------------------------------------------------------------------------------------
+eitetha = integrar_num(eitetha , m_flectores)
 
 if Aa == 0:
-    vector = m_flectores[0:int((Ab*elm))]
+    vector_M = m_flectores[0:int((Ab*elm))]               #almacena momentos necesarios para calcular la tangente de referencia (se encuentran entre los dos apoyos)
 else:
-    vector = m_flectores[int((Aa*elm)):int((Ab*elm))]
+    vector_M = m_flectores[int((Aa*elm)):int((Ab*elm))]
 
 print(m_flectores)
-print(vector)    
+print(vector_M)    
 
-xvec = np.flip(np.arange(0, Ab-Aa,delt))
-primermomento = integrate.trapz(np.multiply(xvec, vector*(1/(2000*2070000000000)), xvec))
-pendi = -primermomento/(Ab-Aa)
+xvec = np.flip(np.arange(0, Ab-Aa, delt))
+primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E *I)), xvec))
+Pen_ref = -primermomento/(Ab-Aa)
 ##
 if Aa == 0:
-    c1 = np.repeat(2000*2070000000000*pendi-eitetha[0],len(eitetha))
+    c1 = np.repeat(E * I*Pen_ref-eitetha[0],len(eitetha))
 else:
-    c1 = np.repeat(2000*2070000000000*pendi-eitetha[int((Aa*elm))-1],len(eitetha))
+    c1 = np.repeat(E * I*Pen_ref-eitetha[int((Aa*elm))-1],len(eitetha))
 ##
 print(c1[0])
-tetha = (eitetha+c1)*(1/(2000*2070000000000))/elm
+tetha = (eitetha+c1)*(1/(E * I))/elm
 #hacerlo para las tres secciones 
 
 #deflexiones--------------------------------------------------------------------------------------------------------------------------
 
-eideflexiones = integrar_num(eideflexiones, Vpc, tetha)
+eideflexiones = integrar_num(eideflexiones,tetha)
 
 c2 = np.repeat(-eideflexiones[int((Ab*elm))-1],len(eideflexiones))  
 
@@ -133,11 +133,13 @@ deflexiones = (eideflexiones+c2)/elm
 
 print(c2[0])
 print(deflexiones)
+print("pendiente en la carga puntual: {}".format(tetha[2*elm-1]))
+print("defelxion en la carga puntual: {}".format(deflexiones[2*elm-1]))
 
 #Grafico de cargas--------------------------------------------------------------------------------------------------------------------
-print("prueba_Sync_3." , sum(Vpc))
 
-# Magnitud del vector
+
+# Magnitud del vector_M
 x = 0
 y = -2
 
@@ -165,7 +167,7 @@ ax2.set_title("Momentos flectores")
 ax3.plot(LR, tetha, color = "red")
 ax3.set_title("Momentos flectores")
 
-ax4.plot(LR, deflexiones, color = "blue")
+ax4.plot(LR, deflexiones, color = "blue",)
 ax4.set_title("Momentos flectores")
 
 plt.show()

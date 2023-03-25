@@ -103,16 +103,11 @@ def Momentos_f(elm,momentums):                                  ##Vector de mome
             i = 1
     return momentums
 
-def integrar_num(V_in, V_e, tetha):
-    if len(tetha) == 0:
-        V_in = np.repeat(float(0),len(V_e))
-        V_in[0] = V_e[0]
-        for t in range(len(V_e)-1):
-            V_in[t+1] = V_in[t] + V_e[t+1]
-    else:
-        V_in = np.repeat(float(0),len(V_e))
-        for t in range(len(V_e)-1):
-            V_in[t+1] = V_in[t] + tetha[t+1]
-
-
+def integrar_num(V_in, V_e):
+    
+    V_in = np.repeat(float(0),len(V_e))
+    V_in[0] = V_e[0]
+    for t in range(len(V_e)-1):
+         V_in[t+1] = V_in[t] + V_e[t+1]
+    
     return V_in
