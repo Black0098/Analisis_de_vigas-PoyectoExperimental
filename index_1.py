@@ -180,9 +180,9 @@ ax2.plot(LR, m_flectores, color = "violet")
 ax2.set_title("Momentos flectores")
 
 ax3.plot(LR, tetha, color = "red")
-ax3.set_title("Momentos flectores")
+ax3.set_title("Pendientes")
 
 ax4.plot(LR, deflexiones, color = "blue",)
-ax4.set_title("Momentos flectores")
+ax4.set_title("Deflexiones")
 
 plt.show()
