@@ -200,7 +200,7 @@ for i in y2_g:
     yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
 
 for i in range(len(yE_g)):
-    x = np.linspace(a_g[i], b_g[i], elm)                                    
+    x = np.linspace(xa_g[i], xb_g[i], elm)                                    
     ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
     
 
