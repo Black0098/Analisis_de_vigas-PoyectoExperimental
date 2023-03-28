@@ -50,8 +50,17 @@ while (i==0):                                       # ciclo de ingreso de carga
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
         Qy , area, a, b, xa, xb, y2 = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
-        Qys.append(Qy)                                    # almacena el momento de area
-# ----
+        
+        Qys.append(Qy)                                                               # almacena el momento de area
+        a_g.append(a)                                                                # almacena los limites inferiores       
+        b_g.append(b)                                                                # almacena  los limites superiores                   
+        xa_g.append(xa)                                                              # almacena  las posiciones iniciales   
+        xb_g.append(xb)                                                              # almacena  las posiciones finales   
+        y2_g.append(y2)                                                              # almacena  las funciones   
+        
+        
+        
+        
     else:                                               # hace parte del menu de usuario
         print('Por favor ingrese un numero valido')     # "             "
 
@@ -140,9 +149,9 @@ primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E *I)), xvec))
 Pen_ref = -primermomento/(Ab-Aa)
 ##
 if Aa == 0:
-    c1 = np.repeat(E * I*Pen_ref-eitetha[0],len(eitetha))
+    c1 = np.repeat(E * I* Pen_ref-eitetha[0],len(eitetha))
 else:
-    c1 = np.repeat(E * I*Pen_ref-eitetha[int((Aa*elm))-1],len(eitetha))
+    c1 = np.repeat(E * I* Pen_ref-eitetha[int((Aa*elm))-1],len(eitetha))
 ##
 print(c1[0])
 tetha = (eitetha+c1)*(1/(E * I))/elm
@@ -165,35 +174,34 @@ x = 0
 y = -2
 
 fig, ax = plt.subplots()
-ax.plot([1]*Lg, color = "k", linewidth = 3)
+ax.plot([0]*Lg, color = "k", linewidth = 3)                                 #viga
 
 #Cargas puntuales
 for m in range(len(coordenadas_p)):
     if (coordenadas_p[m]>=0):
-        ax.quiver(coordenadas_p[m], 3, x, y, scale_units='xy', scale=1, color = "g")
+        ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
 #Apoyos
-ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [0,1,0, 0],[(Ab-1), Ab, (Ab+1),(Ab-1)], [0,1,0,0], color = "k")
+ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,0,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,0,-1, -1], color = "k")
 ax.set_yticks(np.arange(0, 10, step=1))
 ax.set_xticks(np.arange(0, L+1, step=1))
 
 #Cargas distribuidas
-a_g.append(a)                                                                #Se agregan los limites inferiores       
-b_g.append(b)                                                                #Se agregan los limites superiores                   
-xa_g.append(xa)                                                              #Se agregan las posiciones iniciales   
-xb_g.append(xb)                                                              #Se agregan las posiciones finales   
-y2_g.append(y2)                                                              #Se agregan las funciones   
 
-for e in y2_g:
-    if (type(y2_g[e]) == int)|(type(y2_g[e]) == float):                     #Si la función en una constante
-        y2_g = np.repeat(y2_g[e], elm)                                      #Se repite ese valor         
-        yE_g.append(y2_g)                                                   #Se agrega al vector de funciones evaluadas
-    else:
-        func = lambda x: eval(y2_g[e])                                      #Evalua las funciones
-        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
 
-for f in range(len(yE_g)):
-    x = np.linspace(a_g[f], b_g[f], elm)                                    
-    ax.plot(x, yE_g[f](x), label=f'Function {f+1}')
+for i in range(len(y2_g)):
+    if "x" not in y2_g[i]:                                             # Si la función en una constante
+        exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
+        y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
+    
+                                                   
+
+for i in y2_g:
+    func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
+    yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
+
+for i in range(len(yE_g)):
+    x = np.linspace(a_g[i], b_g[i], elm)                                    
+    ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
     
 
 #Diagramas cortantes y flexionantes
@@ -212,3 +220,5 @@ ax4.plot(LR, deflexiones, color = "blue",)
 ax4.set_title("Deflexiones")
 
 plt.show()
+
+print(y2_g)
