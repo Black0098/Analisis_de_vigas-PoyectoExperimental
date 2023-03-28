@@ -11,6 +11,12 @@ coordenadas_p = []                              # Vector para las coordenadas de
 v_cortantes = []                                # Vector para la los cortantes 
 eitetha = []                                    # V ector para las Pen_refentes ssssss                        
 eideflexiones = []
+a_g = []                                        #Vector que almacena los limites inferiores            
+b_g = []                                        #Vector que almacena los limites superiores
+xa_g = []                                       #Vector que almacena las primeras posiciones    
+xb_g = []                                       #Vector que almacena las sugundas posiciones
+y2_g = []                                       #Vector que almacena las funciones     
+yE_g = []                                       #Vector que almacena las funciones evaluadas    
 elm = 1000
 delt = 0.001
 E = 10000000                                    # Modulo de elasticidad 
@@ -43,7 +49,7 @@ while (i==0):                                       # ciclo de ingreso de carga
 
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
-        Qy , area = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
+        Qy , area, a, b, xa, xb, y2 = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
         Qys.append(Qy)                                    # almacena el momento de area
 # ----
     else:                                               # hace parte del menu de usuario
@@ -169,6 +175,26 @@ for m in range(len(coordenadas_p)):
 ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [0,1,0, 0],[(Ab-1), Ab, (Ab+1),(Ab-1)], [0,1,0,0], color = "k")
 ax.set_yticks(np.arange(0, 10, step=1))
 ax.set_xticks(np.arange(0, L+1, step=1))
+
+#Cargas distribuidas
+a_g.append(a)                                                                #Se agregan los limites inferiores       
+b_g.append(b)                                                                #Se agregan los limites superiores                   
+xa_g.append(xa)                                                              #Se agregan las posiciones iniciales   
+xb_g.append(xb)                                                              #Se agregan las posiciones finales   
+y2_g.append(y2)                                                              #Se agregan las funciones   
+
+for e in y2_g:
+    if (type(y2_g[e]) == int)|(type(y2_g[e]) == float):                     #Si la función en una constante
+        y2_g = np.repeat(y2_g[e], elm)                                      #Se repite ese valor         
+        yE_g.append(y2_g)                                                   #Se agrega al vector de funciones evaluadas
+    else:
+        func = lambda x: eval(y2_g[e])                                      #Evalua las funciones
+        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
+
+for f in range(len(yE_g)):
+    x = np.linspace(a_g[f], b_g[f], elm)                                    
+    ax.plot(x, yE_g[f](x), label=f'Function {f+1}')
+    
 
 #Diagramas cortantes y flexionantes
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
