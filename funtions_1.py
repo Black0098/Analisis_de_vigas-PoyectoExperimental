@@ -22,8 +22,8 @@ def get_interval():                                             ##Intervalo de l
     return a, b
 
 def Fun_Position():                                             ##Posicion de la funcion en la viga  
-    xa = float(input("ingrese la posición donde inicia la carga"))
-    xb = float(input("ingrese la posición donde finaliza la carga"))
+    xa = float(input("ingrese la posición donde inicia la carga: "))
+    xb = float(input("ingrese la posición donde finaliza la carga: "))
     return xa,xb
 
 def Cargas_puntuales_f(Vpc):                                    ##cargas y primer momento puntual    
