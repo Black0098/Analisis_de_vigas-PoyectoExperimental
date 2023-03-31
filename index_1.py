@@ -19,9 +19,10 @@ y2_g = []                                       #Vector que almacena las funcion
 yE_g = []                                       #Vector que almacena las funciones evaluadas    
 elm = 1000
 delt = 0.001
-E = 10000000                                    # Modulo de elasticidad 
-I = 10                                          # Momento de inercia
-                                                
+
+print('Ingrese en que sistema va a trabajar')
+print("1. SI    |   2. Ingles")
+sys = input()
 
 print('Ingrese la longitud de la viga:')        # hace parte del menú de usuario
 L = float(input(""))                            # almacena la longitud de la viga
@@ -58,9 +59,6 @@ while (i==0):                                       # ciclo de ingreso de carga
         xb_g.append(xb)                                                              # almacena  las posiciones finales   
         y2_g.append(y2)                                                              # almacena  las funciones   
         
-        
-        
-        
     else:                                               # hace parte del menu de usuario
         print('Por favor ingrese un numero valido')     # "             "
 
@@ -84,13 +82,13 @@ print('1. W')
 p = input()
 
 if (p == '1'):
-    print(df.iloc[:, 0:3])
+    print(df.iloc[:, 1:4])
     print('Seleccione la designación de la viga: ')
-    print(df.iloc[1:, 0:3])
     d = int(input())
-    E_i = (df.iloc[d,2])*(df.iloc[d,3])
+    E_i = (df.iloc[d,4])*(df.iloc[d,5])
 else:
     print('Por favor ingrese un numero valido')
+    E_i = 1000000
 
 #---------------- Analisis -----------------------------------------------------------------------------------------------------------
 
@@ -145,16 +143,16 @@ print(m_flectores)
 print(vector_M)    
 
 xvec = np.flip(np.arange(0, Ab-Aa, delt))
-primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E *I)), xvec))
+primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E_i)), xvec))
 Pen_ref = -primermomento/(Ab-Aa)
 ##
 if Aa == 0:
-    c1 = np.repeat(E * I* Pen_ref-eitetha[0],len(eitetha))
+    c1 = np.repeat(E_i*Pen_ref-eitetha[0],len(eitetha))
 else:
-    c1 = np.repeat(E * I* Pen_ref-eitetha[int((Aa*elm))-1],len(eitetha))
+    c1 = np.repeat(E_i*Pen_ref-eitetha[int((Aa*elm))-1],len(eitetha))
 ##
 print(c1[0])
-tetha = (eitetha+c1)*(1/(E * I))/elm
+tetha = (eitetha+c1)*(1/(E_i))/elm
 #hacerlo para las tres secciones 
 
 tetha = (eitetha+c1)*(1/(E_i))/elm                                          # calculo de las pendientes utilizando la ecuacion matemática

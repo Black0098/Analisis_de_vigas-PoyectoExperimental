@@ -1,5 +1,19 @@
-[
-{"Material":"acero","Perfil": "w", "m_inercia": 2100, "mod_young": 207000000000},
-{"Material":"acero","Perfil": "w", "Designacion": "W24x68", "m_inercia": 1830, "mod_young": 207000000000},
-{"Material":"acero","Perfil": "w", "Designacion": "W21x73", "m_inercia": 1600, "mod_young": 207000000000}
+[{"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 24x76", "m_inercia": 2100, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 24x68", "m_inercia": 1830, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 21x73", "m_inercia": 1600, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 21x57", "m_inercia": 1170, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "S", "designacion": "S 24x121", "m_inercia": 3160, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "S", "designacion": "S 24x90", "m_inercia": 2250, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"acero","perfil": "S", "designacion": "S 20x96", "m_inercia": 1670, "mod_young": 29000000},
+{"sistema": "EE.UU","material":"aluminio","perfil": "I", "designacion": "I 3x1.637", "m_inercia": 2.24, "mod_young": 10.400000},
+{"sistema": "EE.UU","material":"aluminio","perfil": "I", "designacion": "I 3x2.030", "m_inercia": 2.71, "mod_young": 10.400000},
+{"sistema": "EE.UU","material":"aluminio","perfil": "I", "designacion": "I 4x2.311", "m_inercia": 5.62, "mod_young": 10.400000},
+{"sistema": "EE.UU","material":"aluminio","perfil": "I", "designacion": "I 4x2.793", "m_inercia": 6.71, "mod_young": 10.400000},
+{"sistema": "SI","material":"acero","perfil": "W", "designacion": "W 760x257", "m_inercia": 3.43E-03, "mod_young": 200000000000},
+{"sistema": "SI","material":"acero","perfil": "W", "designacion": "W 760x161", "m_inercia": 1.86E-03, "mod_young": 200000000000},
+{"sistema": "SI","material":"acero","perfil": "W", "designacion": "W 760x257", "m_inercia": 2.36E-03, "mod_young": 200000000000},
+{"sistema": "SI","material":"aluminio","perfil": "I", "designacion": "I 76x2.436", "m_inercia": 9.32E-07, "mod_young": 73000000000},
+{"sistema": "SI","material":"aluminio","perfil": "I", "designacion": "I 76x3.021", "m_inercia": 1.13E-06, "mod_young": 73000000000},
+{"sistema": "SI","material":"aluminio","perfil": "I", "designacion": "I 102x3.439", "m_inercia": 2.34E-06, "mod_young": 73000000000},
+{"sistema": "SI","material":"acero","perfil": "S", "designacion": "I 102x3.439", "m_inercia": 2.34E-06, "mod_young": 200000000000}
 ]
