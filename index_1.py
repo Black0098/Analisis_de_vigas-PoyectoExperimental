@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
+from matplotlib.patches import FancyArrowPatch
 
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
 df = pd.read_json("vigas_data.json")            # Base de datos de tipos de vigas
@@ -17,6 +18,7 @@ xa_g = []                                       #Vector que almacena las primera
 xb_g = []                                       #Vector que almacena las sugundas posiciones
 y2_g = []                                       #Vector que almacena las funciones     
 yE_g = []                                       #Vector que almacena las funciones evaluadas    
+coordenadas_m = []                              #Vector que almacena las coordenadas de los momentos
 elm = 1000
 delt = 0.001
 
@@ -51,7 +53,6 @@ while (i==0):                                       # ciclo de ingreso de carga
         Qy , cordenada = Cargas_puntuales_f(Vpc)    # calcula el momento de area e ingresa la cordenada de la carga 
         Qys.append(Qy)                              # almacena el momento de area
         coordenadas_p.append(cordenada)             # almacena la carga
-
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
         Qy , area, a, b, xa, xb, y2 = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
@@ -75,7 +76,7 @@ while (i==0):                                       # ciclo de ingreso de carga
         i = 1                                           # "             "
 
 momentums = Momentos_f(elm , momentums)
-
+    
 print('Seleccione el numero del material de la viga: ')
 print('1. Acero')
 print('2. Aluminio')
@@ -197,6 +198,7 @@ if (type == '1'):
     for m in range(len(coordenadas_p)):
         if (coordenadas_p[m]>=0):
             ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
+
     #Apoyos
     ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,0,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,0,-1, -1], color = "k")
     ax.set_yticks(np.arange(0, 10, step=1))
@@ -204,14 +206,11 @@ if (type == '1'):
 
     #Cargas distribuidas
 
-
     for i in range(len(y2_g)):
         if "x" not in y2_g[i]:                                             # Si la función en una constante
             exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
             y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
         
-                                                    
-
     for i in y2_g:
         func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
         yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
@@ -219,8 +218,8 @@ if (type == '1'):
     for i in range(len(yE_g)):
         x = np.linspace(xa_g[i], xb_g[i], elm)                                    
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
-        
-
+        ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
+    
 #Diagramas cortantes y flexionantes
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
 
