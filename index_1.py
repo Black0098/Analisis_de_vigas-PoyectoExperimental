@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
-from matplotlib.patches import FancyArrowPatch
+#from matplotlib.patches import FancyArrowPatch
+from matplotlib.patches import Rectangle
+from matplotlib.patches import Polygon
 
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
 df = pd.read_json("vigas_data.json")            # Base de datos de tipos de vigas
@@ -191,8 +193,9 @@ if (type == '1'):
     x = 0
     y = -2
 
+    viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     fig, ax = plt.subplots()
-    ax.plot([0]*Lg, color = "k", linewidth = 3)                                 #viga
+    ax.add_patch(viga)
 
     #Cargas puntuales
     for m in range(len(coordenadas_p)):
@@ -200,7 +203,10 @@ if (type == '1'):
             ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
 
     #Apoyos
-    ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,0,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,0,-1, -1], color = "k")
+    ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,-0.3,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,-0.3,-1, -1], color='peru')
+    ax.fill_between([Aa-1, Aa, Aa+1, Aa-1], [-1, -0.3, -1, -1], [Ab-1, Ab, Ab+1, Ab-1], facecolor='peru', alpha=0.3)
+
+
     ax.set_yticks(np.arange(0, 10, step=1))
     ax.set_xticks(np.arange(0, L+1, step=1))
 
@@ -219,7 +225,39 @@ if (type == '1'):
         x = np.linspace(xa_g[i], xb_g[i], elm)                                    
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
         ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
+
+elif (type == '2'):
+    # Magnitud del vector_M
+    x = 0
+    y = -2
+
+    viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
+    empotrada = Rectangle(xy=(0,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
+    fig, ax = plt.subplots()
     
+    ax.add_patch(viga)
+    ax.add_patch(empotrada)
+    
+    #Cargas puntuales
+    for m in range(len(coordenadas_p)):
+        if (coordenadas_p[m]>=0):
+         ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
+
+    #Cargas distribuidas
+    for i in range(len(y2_g)):
+        if "x" not in y2_g[i]:                                             # Si la función en una constante
+            exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
+            y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
+        
+    for i in y2_g:
+        func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
+        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
+
+    for i in range(len(yE_g)):
+        x = np.linspace(xa_g[i], xb_g[i], elm)                                    
+        ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
+        ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
+  
 #Diagramas cortantes y flexionantes
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
 
