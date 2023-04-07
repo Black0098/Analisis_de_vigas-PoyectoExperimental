@@ -25,7 +25,7 @@ elm = 1000
 delt = 0.001
 
 print('Escoja el tipo de viga: \n 1. Simplemente apoya\n 2. Empotrada a la izaquierda\n 3. Empotrada a la derecha')
-type = input()
+tipo = input()
 
 print('Ingrese en que sistema va a trabajar')
 print("1. SI    |   2. Ingles")
@@ -39,7 +39,7 @@ Lg = int(L+1)                                   # Longitud de la barra para graf
 Vpc = np.repeat(float(0),len(LR))               # Se almacenan las cargas en cada punto
 momentums = np.repeat(float(0),len(LR))         # Se almacenan los momentos en cada punto 
 
-if (type == '1'):
+if (tipo == '1'):
     Aa, Ab = apoyos()                               # Se ingresan los apoyos
 
 # ----------- Menu de ususario ---------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ else:
 #reaccciones----------------------------------------------------------------------------------------
 xel = Xel_total(Qys,Vpc)                                #calculo del centroide la distribución de cargas
 
-if (type == '1'):
+if (tipo == '1'):
     R2 = (sum(Vpc)*(xel-Aa) - sum(momentums)) / (Ab-Aa)     # calculo de la reaccion en el segundo apoyo
     R1 = sum(Vpc) - R2                                      # calculo de la reaccion en el primer apoyo
     Vpc = -Vpc                          # Crea el eje y del sistema, se direccionan las cargas
@@ -120,7 +120,7 @@ if (type == '1'):
     print("La carga total es: ", sum(Vpc))
     #
 
-elif (type == '2'):
+elif (tipo == '2'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(xel) - sum(momentums)
     Vpc = -Vpc
@@ -128,6 +128,15 @@ elif (type == '2'):
     momentums[0] += M_A
     print("La reaccion en A es: {}".format(R))
     print("El momento en A es: {}".format(M_A))
+
+elif (tipo == '3'):
+    R = sum(Vpc)
+    M_A = sum(Vpc)*(L-xel) - sum(momentums)
+    Vpc = -Vpc
+    Vpc[int(L*elm)-1] += R
+    momentums[int(L*elm)-1] += M_A
+    print("La reaccion en B es: {}".format(R))
+    print("El momento en B es: {}".format(M_A))
 
 #Estatica: fuerzas cortantes y momentos flectores ----------------------------------------------------------------------------------------------------------------
 
@@ -150,7 +159,7 @@ for t in range(len(Vpc)-1):                             # calculo de los momento
 #Pen_refentes---------------------------------------------------------------------------------------------------------------------------
 eitetha = integrar_num(eitetha , m_flectores)
 
-if (type == '1'):
+if (tipo == '1'):
     if Aa == 0:
         vector_M = m_flectores[0:int((Ab*elm))]               #almacena momentos necesarios para calcular la tangente de referencia (se encuentran entre los dos apoyos)
     else:
@@ -174,7 +183,7 @@ if (type == '1'):
     c2 = np.repeat(-eideflexiones[int((Ab*elm))-1],len(eideflexiones))
     deflexiones = (eideflexiones+c2)/elm
 
-elif (type == '2'):
+elif (tipo == '2'):
     vector_M = m_flectores[0:int(L*elm)]
     xvec = np.flip(np.arange(0, L, delt))
     Pen_ref = integrate.trapz(vector_M*(1/(E_i)), xvec)
@@ -186,9 +195,21 @@ elif (type == '2'):
     deflexiones = (eideflexiones+c2)/elm
     print("La deflexion en L es: {}".format(deflexiones[int(L*elm)-1]))
 
+elif (tipo == '3'):
+    vector_M = m_flectores[0:int(L*elm)]
+    xvec = np.flip(np.arange(0, L, delt))
+    Pen_ref = integrate.trapz(vector_M*(1/(E_i)), xvec)
+    c1 = np.repeat(E_i*Pen_ref-eitetha[int(L*elm)-1],len(eitetha))
+    tetha = (eitetha+c1)*(1/(E_i))/elm
+    
+    eideflexiones = integrar_num(eideflexiones,tetha)
+    c2 = np.repeat(-eideflexiones[int(L*elm)-1],len(eideflexiones))  
+    deflexiones = (eideflexiones+c2)/elm
+    print("La deflexion en 0 es: {}".format(deflexiones[0]))
+
 #Grafico de cargas--------------------------------------------------------------------------------------------------------------------
 
-if (type == '1'):
+if (tipo == '1'):
     # Magnitud del vector_M
     x = 0
     y = -2
@@ -226,7 +247,7 @@ if (type == '1'):
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
         ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
 
-elif (type == '2'):
+elif (tipo == '2'):
     # Magnitud del vector_M
     x = 0
     y = -2
