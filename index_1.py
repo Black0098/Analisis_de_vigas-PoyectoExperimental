@@ -3,10 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
-#from matplotlib.patches import FancyArrowPatch
 from matplotlib.patches import Rectangle
-from matplotlib.patches import Polygon
-
+import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
 df = pd.read_json("vigas_data.json")            # Base de datos de types de vigas
 Qys = []                                        # Vector para los primeros momentos de area 
@@ -207,7 +206,11 @@ elif (type == '3'):
     deflexiones = (eideflexiones+c2)/elm
     print("La deflexion en 0 es: {}".format(deflexiones[0]))
 
+
 #Grafico de cargas--------------------------------------------------------------------------------------------------------------------
+root = tk.Tk()
+root.geometry("800x600")
+root.title("Análsis estructural")
 
 if (type == '1'):
     # Magnitud del vector_M
@@ -216,6 +219,7 @@ if (type == '1'):
 
     viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     fig, ax = plt.subplots()
+    ax.set_title("Análisis Estructural")
     ax.add_patch(viga)
 
     #Cargas puntuales
@@ -255,6 +259,7 @@ elif (type == '2'):
     viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     empotrada = Rectangle(xy=(0,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
     fig, ax = plt.subplots()
+    ax.set_title("Análisis Estructural")
     
     ax.add_patch(viga)
     ax.add_patch(empotrada)
@@ -287,6 +292,7 @@ elif (type == '3'):
     viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     empotrada = Rectangle(xy=(Lg,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
     fig, ax = plt.subplots()
+    ax.set_title("Análisis Estructural")
     
     ax.add_patch(viga)
     ax.add_patch(empotrada)
@@ -326,6 +332,20 @@ ax3.set_title("Pendientes")
 ax4.plot(LR, deflexiones, color = "blue",)
 ax4.set_title("Deflexiones")
 
-plt.show()
+# Crear los widgets Canvas para mostrar las gráficas
+canvas1 = FigureCanvasTkAgg(fig, master=root)                       #Añade la figura 1 a la ventana principal
+canvas1.draw()
+canvas1.get_tk_widget().grid(row=0, column=0, sticky="nsew")        #Se ajusta la posición de la gráfica en la ventana
+
+canvas2 = FigureCanvasTkAgg(fig2,  master=root)                     #Añade la figura 2 a la ventana principal
+canvas2.draw()
+canvas2.get_tk_widget().grid(row=0, column=1, sticky="nsew")        #Se ajusta la posición de la gráfica en la ventana
+
+#Establece los "pesos" para que se expanda la gráfica
+root.columnconfigure(0, weight=1)
+root.columnconfigure(1, weight=1)
+root.rowconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+root.mainloop()
 
 print(y2_g)
