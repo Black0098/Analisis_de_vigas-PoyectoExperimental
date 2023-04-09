@@ -103,6 +103,7 @@ else:
 xel = Xel_total(Qys,Vpc)                                #calculo del centroide la distribución de cargas
 
 if (tipo == '1'):
+    c_tot = sum(Vpc)                                        # Carga total antes de agregar las reacciones 
     R2 = (sum(Vpc)*(xel-Aa) - sum(momentums)) / (Ab-Aa)     # calculo de la reaccion en el segundo apoyo
     R1 = sum(Vpc) - R2                                      # calculo de la reaccion en el primer apoyo
     Vpc = -Vpc                          # Crea el eje y del sistema, se direccionan las cargas
@@ -114,11 +115,8 @@ if (tipo == '1'):
         Vpc[(int(Ab*elm))-1] += R2      # se agrega la reaccion por medio de superposicion
     
     #Verificacion
-    print("x de elemento: {}".format(xel))
-    print("La reaccion en el primer apoyo es: {}".format(R1))
-    print("La reaccion en el segundo apoyo es: {}".format(R2))
-    print("La carga total es: ", sum(Vpc))
-    #
+    print(" \n \n \n \n \n Resultados \n ")
+    sys_result(sys, xel, R1, R2, c_tot)
 
 elif (tipo == '2'):
     R = sum(Vpc)
@@ -164,9 +162,7 @@ if (tipo == '1'):
         vector_M = m_flectores[0:int((Ab*elm))]               #almacena momentos necesarios para calcular la tangente de referencia (se encuentran entre los dos apoyos)
     else:
         vector_M = m_flectores[int((Aa*elm)):int((Ab*elm))]
-
-    print(m_flectores)
-    print(vector_M)    
+   
 
     xvec = np.flip(np.arange(0, Ab-Aa, delt))
     primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E_i)), xvec))
@@ -296,4 +292,3 @@ ax4.set_title("Deflexiones")
 
 plt.show()
 
-print(y2_g)

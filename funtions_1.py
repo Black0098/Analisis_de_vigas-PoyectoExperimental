@@ -111,3 +111,16 @@ def integrar_num(V_in, V_e):
          V_in[t+1] = V_in[t] + V_e[t+1]
     
     return V_in
+
+def sys_result(sys,xel,R1,R2,c_tot):
+    if sys == "1":
+        print("x de elemento: {} m".format(xel))
+        print("La reaccion en el primer apoyo es: {} N".format(R1))
+        print("La reaccion en el segundo apoyo es: {} N".format(R2))
+        print("La carga total es: {} N ". format(c_tot))
+    elif sys == "2":
+        print("x de elemento: {} ft".format(xel))
+        print("La reaccion en el primer apoyo es: {} lb".format(R1))
+        print("La reaccion en el segundo apoyo es: {} lb".format(R2))
+        print("La carga total es: {} lb ". format(c_tot))
+
