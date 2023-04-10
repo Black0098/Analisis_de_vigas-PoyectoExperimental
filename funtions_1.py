@@ -112,15 +112,98 @@ def integrar_num(V_in, V_e):
     
     return V_in
 
-def sys_result(sys,xel,R1,R2,c_tot):
-    if sys == "1":
-        print("x de elemento: {} m".format(xel))
-        print("La reaccion en el primer apoyo es: {} N".format(R1))
-        print("La reaccion en el segundo apoyo es: {} N".format(R2))
-        print("La carga total es: {} N ". format(c_tot))
-    elif sys == "2":
-        print("x de elemento: {} ft".format(xel))
-        print("La reaccion en el primer apoyo es: {} lb".format(R1))
-        print("La reaccion en el segundo apoyo es: {} lb".format(R2))
-        print("La carga total es: {} lb ". format(c_tot))
+def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):
+    print("\n \n \n \n \n Resultados \n")
+    if type == "1":
+        if sys == "1":
+            print("x de elemento: {} m".format(xel))
+            print("La reaccion en el primer apoyo es: {} N".format(R1))
+            print("La reaccion en el segundo apoyo es: {} N".format(R2))
+            print("La carga total es: {} N ". format(c_tot))
+        elif sys == "2":
+            print("x de elemento: {} ft".format(xel))
+            print("La reaccion en el primer apoyo es: {} lb".format(R1))
+            print("La reaccion en el segundo apoyo es: {} lb".format(R2))
+            print("La carga total es: {} lb ". format(c_tot))
 
+    elif type == "2":
+        if sys == "1":
+            print("La reaccion en A es: {} N".format(R))
+            print("El momento en A es: {} N·m".format(M_A))
+        elif sys =="2":
+            print("La reaccion en A es: {} lb".format(R))
+            print("El momento en A es: {} lb·ft".format(M_A))
+
+    elif type == "3":
+        if sys == "1":
+            print("La reaccion en B es: {} N".format(R))
+            print("El momento en B es: {} N·m".format(M_A))
+        elif sys =="2":
+            print("La reaccion en B es: {} lb".format(R))
+            print("El momento en B es: {} lb·ft".format(M_A))
+
+def t_viga(sys,df):
+
+    print('Seleccione el  material de la viga y tipo de perfil: \f')
+    print('Acero:')
+    print('     1. W')
+    print('     2. S')
+    print('Aluminio:')
+    print('     3. I')
+    p = input()
+
+    if (p == '1'):
+        if (sys == '1'):
+            print(df.iloc[0:4, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        elif (sys == '2'):
+            print(df.iloc[8:11, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        else:
+            E_i = 100000
+    elif (p == '2'):#falta
+        if (sys == '1'):
+            print(df.iloc[0:4, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        elif (sys == '2'):
+            print(df.iloc[8:11, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        else:
+            E_i = 100000
+    elif (p == '3'):
+        if (sys == '1'):
+            print(df.iloc[11:14, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        elif (sys == '2'):
+            print(df.iloc[4:8, 1:4])
+            print('Seleccione la designación de la viga: ')
+            d = int(input())
+            E_i = (df.iloc[d,4])*(df.iloc[d,5])
+
+        else:
+            E_i = 100000
+    else:
+        print('Por favor ingrese un numero valido')
+        E_i = 1000000
+    return E_i
+
+def vector_puntual(coordenadas_p, ax,x,y):
+
+    for m in range(len(coordenadas_p)):
+        if (coordenadas_p[m]>=0):
+            ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")

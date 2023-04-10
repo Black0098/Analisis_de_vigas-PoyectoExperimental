@@ -77,24 +77,8 @@ while (i==0):                                       # ciclo de ingreso de carga
         i = 1                                           # "             "
 
 momentums = Momentos_f(elm , momentums)
+E_i = t_viga(sys,df)
     
-print('Seleccione el numero del material de la viga: ')
-print('1. Acero')
-print('2. Aluminio')
-m = input()
-
-print('Seleccione el numero del type de perfil de la viga: ')
-print('1. W')
-p = input()
-
-if (p == '1'):
-    print(df.iloc[:, 1:4])
-    print('Seleccione la designación de la viga: ')
-    d = int(input())
-    E_i = (df.iloc[d,4])*(df.iloc[d,5])
-else:
-    print('Por favor ingrese un numero valido')
-    E_i = 1000000
 
 #---------------- Analisis -----------------------------------------------------------------------------------------------------------
 
@@ -102,6 +86,7 @@ else:
 xel = Xel_total(Qys,Vpc)                                #calculo del centroide la distribución de cargas
 
 if (type == '1'):
+    c_tot = sum(Vpc)
     R2 = (sum(Vpc)*(xel-Aa) - sum(momentums)) / (Ab-Aa)     # calculo de la reaccion en el segundo apoyo
     R1 = sum(Vpc) - R2                                      # calculo de la reaccion en el primer apoyo
     Vpc = -Vpc                          # Crea el eje y del sistema, se direccionan las cargas
@@ -113,29 +98,24 @@ if (type == '1'):
         Vpc[(int(Ab*elm))-1] += R2      # se agrega la reaccion por medio de superposicion
     
     #Verificacion
-    print("x de elemento: {}".format(xel))
-    print("La reaccion en el primer apoyo es: {}".format(R1))
-    print("La reaccion en el segundo apoyo es: {}".format(R2))
-    print("La carga total es: ", sum(Vpc))
-    #
-
+    sys_result(type, sys, xel, R1, R2, R=0, M_A=0, c_tot=c_tot)
+    
 elif (type == '2'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(xel) - sum(momentums)
     Vpc = -Vpc
     Vpc[0] += R
     momentums[0] += M_A
-    print("La reaccion en A es: {}".format(R))
-    print("El momento en A es: {}".format(M_A))
-
+    sys_result(type, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
+    
 elif (type == '3'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(L-xel) - sum(momentums)
     Vpc = -Vpc
     Vpc[int(L*elm)-1] += R
     momentums[int(L*elm)-1] += M_A
-    print("La reaccion en B es: {}".format(R))
-    print("El momento en B es: {}".format(M_A))
+    sys_result(type, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
+
 
 #Estatica: fuerzas cortantes y momentos flectores ----------------------------------------------------------------------------------------------------------------
 
@@ -164,13 +144,13 @@ if (type == '1'):
     else:
         vector_M = m_flectores[int((Aa*elm)):int((Ab*elm))]
 
-    print(m_flectores)
-    print(vector_M)    
+
 
     xvec = np.flip(np.arange(0, Ab-Aa, delt))
     primermomento = integrate.trapz(np.multiply(xvec, vector_M*(1/(E_i)), xvec))
     Pen_ref = -primermomento/(Ab-Aa)
     ##
+    
     if Aa == 0:
         c1 = np.repeat(E_i*Pen_ref-eitetha[0],len(eitetha))
     else:
@@ -211,22 +191,21 @@ elif (type == '3'):
 root = tk.Tk()
 root.geometry("800x600")
 root.title("Análsis estructural")
+viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
+fig, ax = plt.subplots()
 
-if (type == '1'):
-    # Magnitud del vector_M
-    x = 0
-    y = -2
+# Magnitud del vector_M
+x = 0
+y = -2
 
-    viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
-    fig, ax = plt.subplots()
-    ax.set_title("Análisis Estructural")
-    ax.add_patch(viga)
+ax.set_title("Análisis Estructural")
+ax.add_patch(viga)
 
+if (type == '1'):                                       #graficas viga apoyada
+    
     #Cargas puntuales
-    for m in range(len(coordenadas_p)):
-        if (coordenadas_p[m]>=0):
-            ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
-
+    vector_puntual(coordenadas_p, ax,x,y)
+           
     #Apoyos
     ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,-0.3,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,-0.3,-1, -1], color='peru')
     ax.fill_between([Aa-1, Aa, Aa+1, Aa-1], [-1, -0.3, -1, -1], [Ab-1, Ab, Ab+1, Ab-1], facecolor='peru', alpha=0.3)
@@ -241,7 +220,7 @@ if (type == '1'):
         if "x" not in y2_g[i]:                                             # Si la función en una constante
             exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
             y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
-        
+            
     for i in y2_g:
         func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
         yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
@@ -251,23 +230,13 @@ if (type == '1'):
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
         ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
 
-elif (type == '2'):
-    # Magnitud del vector_M
-    x = 0
-    y = -2
+elif (type == '2'):                                     #graficas viga empotrada izq
 
-    viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     empotrada = Rectangle(xy=(0,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
-    fig, ax = plt.subplots()
-    ax.set_title("Análisis Estructural")
-    
-    ax.add_patch(viga)
     ax.add_patch(empotrada)
     
     #Cargas puntuales
-    for m in range(len(coordenadas_p)):
-        if (coordenadas_p[m]>=0):
-         ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
+    vector_puntual(coordenadas_p, ax,x,y)
 
     #Cargas distribuidas
     for i in range(len(y2_g)):
@@ -284,23 +253,13 @@ elif (type == '2'):
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
         ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
 
-elif (type == '3'):
-    # Magnitud del vector_M
-    x = 0
-    y = -2
+elif (type == '3'):                                     #graficas viga apoyada der
 
-    viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
     empotrada = Rectangle(xy=(Lg,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
-    fig, ax = plt.subplots()
-    ax.set_title("Análisis Estructural")
-    
-    ax.add_patch(viga)
     ax.add_patch(empotrada)
     
     #Cargas puntuales
-    for m in range(len(coordenadas_p)):
-        if (coordenadas_p[m]>=0):
-         ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
+    vector_puntual(coordenadas_p, ax,x,y)
 
     #Cargas distribuidas
     for i in range(len(y2_g)):
@@ -317,7 +276,7 @@ elif (type == '3'):
         ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
         ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
   
-#Diagramas cortantes y flexionantes
+#Diagramas cortantes y flexionantes ---------------------------------------------------------------------------------------------------
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
 
 ax1.plot(LR, v_cortantes, color = "aquamarine")
@@ -347,5 +306,5 @@ root.columnconfigure(1, weight=1)
 root.rowconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 root.mainloop()
+root.quit() 
 
-print(y2_g)
