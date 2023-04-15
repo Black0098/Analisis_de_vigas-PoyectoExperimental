@@ -76,7 +76,7 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     area = sum(Cargas_puntuales)
     distancia = np.linspace(xa, xb, Rectangles)
     Qy = integrate.trapz(np.multiply(distancia,Cargas_puntuales), distancia)*elm
-    return Qy , area, a, b, xa, xb, y2
+    return Qy , area, a, b, xa, xb, y2, y[0]
 
 def Momentos_f(elm,momentums):                                  ##Vector de momentos puntuales       s
     
@@ -89,7 +89,10 @@ def Momentos_f(elm,momentums):                                  ##Vector de mome
         if j == 1:
             m = float(input("ingrese el momento "))
             cordenada = float(input("ingrese la coordenada en X "))
-            momentums[int(cordenada*elm)-1] += m
+            if(cordenada==0):
+                momentums[int(cordenada*elm)] += m
+            else:
+                momentums[int(cordenada*elm)-1] += m
 
             print('Desea agregar otro momento?')
             print('1. Si  |  2. No')

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_json("vigas_data.json")
+"""df = pd.read_json("vigas_data.json")
 print('Ingrese en que sistema va a trabajar')
 print("1. SI    |   2. Ingles")
 sys = input()
@@ -61,4 +61,8 @@ elif (p == '3'):
         E_i = 100000
 else:
     print('Por favor ingrese un numero valido')
-    E_i = 1000000
+    E_i = 1000000"""
+
+a = [[10, 10, 10], [20, 20]]
+print(a)
+print(np.nanmax(a))

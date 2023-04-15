@@ -13,18 +13,20 @@ coordenadas_p = []                              # Vector para las coordenadas de
 v_cortantes = []                                # Vector para la los cortantes 
 eitetha = []                                    # V ector para las Pen_refentes ssssss                        
 eideflexiones = []
+maximos = []
 a_g = []                                        #Vector que almacena los limites inferiores            
 b_g = []                                        #Vector que almacena los limites superiores
 xa_g = []                                       #Vector que almacena las primeras posiciones    
 xb_g = []                                       #Vector que almacena las sugundas posiciones
 y2_g = []                                       #Vector que almacena las funciones     
-yE_g = []                                       #Vector que almacena las funciones evaluadas    
+yE_g = []                                       #Vector que almacena las funciones evaluadas
+y_axiss = []    
 coordenadas_m = []                              #Vector que almacena las coordenadas de los momentos
 elm = 1000
 delt = 0.001
 
 print('Escoja el type de viga: \n 1. Simplemente apoya\n 2. Empotrada a la izaquierda\n 3. Empotrada a la derecha')
-type = input()
+tipo = input()
 
 print('Ingrese en que sistema va a trabajar')
 print("1. SI    |   2. Ingles")
@@ -38,7 +40,7 @@ Lg = int(L+1)                                   # Longitud de la barra para graf
 Vpc = np.repeat(float(0),len(LR))               # Se almacenan las cargas en cada punto
 momentums = np.repeat(float(0),len(LR))         # Se almacenan los momentos en cada punto 
 
-if (type == '1'):
+if (tipo == '1'):
     Aa, Ab = apoyos()                               # Se ingresan los apoyos
 
 # ----------- Menu de ususario ---------------------------------------------------------------------------------------------------------
@@ -56,7 +58,7 @@ while (i==0):                                       # ciclo de ingreso de carga
         coordenadas_p.append(cordenada)             # almacena la carga
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
-        Qy , area, a, b, xa, xb, y2 = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
+        Qy , area, a, b, xa, xb, y2, y_axis = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
         
         Qys.append(Qy)                                                               # almacena el momento de area
         a_g.append(a)                                                                # almacena los limites inferiores       
@@ -64,7 +66,8 @@ while (i==0):                                       # ciclo de ingreso de carga
         xa_g.append(xa)                                                              # almacena  las posiciones iniciales   
         xb_g.append(xb)                                                              # almacena  las posiciones finales   
         y2_g.append(y2)                                                              # almacena  las funciones   
-        
+        y_axiss.append(y_axis)
+
     else:                                               # hace parte del menu de usuario
         print('Por favor ingrese un numero valido')     # "             "
 
@@ -85,7 +88,7 @@ E_i = t_viga(sys,df)
 #reaccciones----------------------------------------------------------------------------------------
 xel = Xel_total(Qys,Vpc)                                #calculo del centroide la distribución de cargas
 
-if (type == '1'):
+if (tipo == '1'):
     c_tot = sum(Vpc)
     R2 = (sum(Vpc)*(xel-Aa) - sum(momentums)) / (Ab-Aa)     # calculo de la reaccion en el segundo apoyo
     R1 = sum(Vpc) - R2                                      # calculo de la reaccion en el primer apoyo
@@ -98,23 +101,23 @@ if (type == '1'):
         Vpc[(int(Ab*elm))-1] += R2      # se agrega la reaccion por medio de superposicion
     
     #Verificacion
-    sys_result(type, sys, xel, R1, R2, R=0, M_A=0, c_tot=c_tot)
+    sys_result(tipo, sys, xel, R1, R2, R=0, M_A=0, c_tot=c_tot)
     
-elif (type == '2'):
+elif (tipo == '2'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(xel) - sum(momentums)
     Vpc = -Vpc
     Vpc[0] += R
     momentums[0] += M_A
-    sys_result(type, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
+    sys_result(tipo, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
     
-elif (type == '3'):
+elif (tipo == '3'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(L-xel) - sum(momentums)
     Vpc = -Vpc
     Vpc[int(L*elm)-1] += R
     momentums[int(L*elm)-1] += M_A
-    sys_result(type, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
+    sys_result(tipo, sys, xel, R1=0, R2=0, R=R, M_A=M_A, c_tot=0)
 
 
 #Estatica: fuerzas cortantes y momentos flectores ----------------------------------------------------------------------------------------------------------------
@@ -138,7 +141,7 @@ for t in range(len(Vpc)-1):                             # calculo de los momento
 #Pen_refentes---------------------------------------------------------------------------------------------------------------------------
 eitetha = integrar_num(eitetha , m_flectores)
 
-if (type == '1'):
+if (tipo == '1'):
     if Aa == 0:
         vector_M = m_flectores[0:int((Ab*elm))]               #almacena momentos necesarios para calcular la tangente de referencia (se encuentran entre los dos apoyos)
     else:
@@ -162,7 +165,7 @@ if (type == '1'):
     c2 = np.repeat(-eideflexiones[int((Ab*elm))-1],len(eideflexiones))
     deflexiones = (eideflexiones+c2)/elm
 
-elif (type == '2'):
+elif (tipo == '2'):
     vector_M = m_flectores[0:int(L*elm)]
     xvec = np.flip(np.arange(0, L, delt))
     Pen_ref = integrate.trapz(vector_M*(1/(E_i)), xvec)
@@ -174,7 +177,7 @@ elif (type == '2'):
     deflexiones = (eideflexiones+c2)/elm
     print("La deflexion en L es: {}".format(deflexiones[int(L*elm)-1]))
 
-elif (type == '3'):
+elif (tipo == '3'):
     vector_M = m_flectores[0:int(L*elm)]
     xvec = np.flip(np.arange(0, L, delt))
     Pen_ref = integrate.trapz(vector_M*(1/(E_i)), xvec)
@@ -188,10 +191,8 @@ elif (type == '3'):
 
 
 #Grafico de cargas--------------------------------------------------------------------------------------------------------------------
-root = tk.Tk()
-root.geometry("800x600")
-root.title("Análsis estructural")
-viga = Rectangle(xy = (0,0), height = -0.3, width = Lg, edgecolor='lightslategray', facecolor='lightslategray')
+viga = Rectangle(xy = (0,0), height = -0.3, width = 10, edgecolor='lightslategray', facecolor='lightslategray')
+
 fig, ax = plt.subplots()
 
 # Magnitud del vector_M
@@ -201,80 +202,48 @@ y = -2
 ax.set_title("Análisis Estructural")
 ax.add_patch(viga)
 
-if (type == '1'):                                       #graficas viga apoyada
+if (tipo == '1'):                                       #graficas viga apoyada
     
     #Cargas puntuales
     vector_puntual(coordenadas_p, ax,x,y)
            
     #Apoyos
-    ax.plot([(Aa-1), Aa, (Aa+1),(Aa-1)], [-1,-0.3,-1, -1],[(Ab-1), Ab, (Ab+1),(Ab-1)], [-1,-0.3,-1, -1], color='peru')
-    ax.fill_between([Aa-1, Aa, Aa+1, Aa-1], [-1, -0.3, -1, -1], [Ab-1, Ab, Ab+1, Ab-1], facecolor='peru', alpha=0.3)
+    ax.plot([(Aa*10/L-1), Aa*10/L, (Aa*10/L+1),(Aa*10/L-1)], [-2,-0.3,-2, -2],[(Ab*10/L-1), Ab*10/L, (Ab*10/L+1),(Ab*10/L-1)], [-2,-0.3,-2, -2], color='peru')
+    ax.fill_between([(Aa*10/L-1), Aa*10/L, (Aa*10/L+1),(Aa*10/L-1)], [-2,-0.3,-2, -2], facecolor='peru', alpha=0.3)
+    ax.fill_between([(Ab*10/L-1), Ab*10/L, (Ab*10/L+1),(Ab*10/L-1)], [-2,-0.3,-2, -2], facecolor='peru', alpha=0.3)
 
+elif (tipo == '2'):                                     #graficas viga empotrada izq
 
-    ax.set_yticks(np.arange(0, 10, step=1))
-    ax.set_xticks(np.arange(0, L+1, step=1))
-
-    #Cargas distribuidas
-
-    for i in range(len(y2_g)):
-        if "x" not in y2_g[i]:                                             # Si la función en una constante
-            exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
-            y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
-            
-    for i in y2_g:
-        func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
-        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
-
-    for i in range(len(yE_g)):
-        x = np.linspace(xa_g[i], xb_g[i], elm)                                    
-        ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
-        ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
-
-elif (type == '2'):                                     #graficas viga empotrada izq
-
-    empotrada = Rectangle(xy=(0,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
+    empotrada = Rectangle(xy=(0,-(10/6)), height = 6, width= -0.3, edgecolor='lightslategray', facecolor='lightslategray')
     ax.add_patch(empotrada)
     
     #Cargas puntuales
     vector_puntual(coordenadas_p, ax,x,y)
 
-    #Cargas distribuidas
-    for i in range(len(y2_g)):
-        if "x" not in y2_g[i]:                                             # Si la función en una constante
-            exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
-            y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
-        
-    for i in y2_g:
-        func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
-        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
+elif (tipo == '3'):                                     #graficas viga apoyada der
 
-    for i in range(len(yE_g)):
-        x = np.linspace(xa_g[i], xb_g[i], elm)                                    
-        ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
-        ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
-
-elif (type == '3'):                                     #graficas viga apoyada der
-
-    empotrada = Rectangle(xy=(Lg,-(Lg/6)), height = Lg, width= -0.2, edgecolor='lightslategray', facecolor='lightslategray')
+    empotrada = Rectangle(xy=(10,-(10/6)), height = 6, width= -0.3, edgecolor='lightslategray', facecolor='lightslategray')
     ax.add_patch(empotrada)
     
     #Cargas puntuales
     vector_puntual(coordenadas_p, ax,x,y)
 
-    #Cargas distribuidas
-    for i in range(len(y2_g)):
-        if "x" not in y2_g[i]:                                             # Si la función en una constante
-            exec(f"j{i} = np.repeat(int(y2_g[i]),elm)")                    # crea variables que van aumentando el numero en funcion de las F_Constantes, cada variable se repite elm_veces
-            y2_g[i] = f"j{i}"                                              # Se añade la repeticion en la posicion por cada F_Constante
-        
-    for i in y2_g:
-        func = lambda x: eval(y2_g[i])                                      #Evalua las funciones
-        yE_g.append(func)                                                   #Se agregan al vector de funciones evaluadas
+for i in range(len(y_axiss)):
+        if ((type(y_axiss[i]) == np.int32)|(type(y_axiss[i]) == np.float32)):
+            print(y_axiss[i])
+            y_axiss[i] = np.repeat(y_axiss[i],int(abs(xb_g[i]*elm)-xa_g[i]*elm))
+            print(y_axiss[i])
+        maximos.append(max(y_axiss[i]))
+if (len(y_axiss)!=0): 
+    maximo = max(maximos)
+    print('maximo')
+    print(maximo)
 
-    for i in range(len(yE_g)):
-        x = np.linspace(xa_g[i], xb_g[i], elm)                                    
-        ax.plot(x, yE_g[i](x), label=f'Function {i+1}')
-        ax.fill_between(x, yE_g[i](x), 0, where = yE_g[i](x)>0, interpolate = True, alpha=0.2) #Rellena la grafica
+for i in range(len(y_axiss)):
+    xx = np.arange(xa_g[i], xb_g[i], delt)
+    ax.plot(xx*10/L, y_axiss[i]*8/maximo, label=f'Function {i+1}') 
+    ax.fill_between(xx*10/L, y_axiss[i]*8/maximo, 0, where = y_axiss[i]*8/maximo>0, interpolate = True, alpha=0.2) #Rellena la grafica"""
+ax.set_axis_off()
   
 #Diagramas cortantes y flexionantes ---------------------------------------------------------------------------------------------------
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
@@ -291,20 +260,4 @@ ax3.set_title("Pendientes")
 ax4.plot(LR, deflexiones, color = "blue",)
 ax4.set_title("Deflexiones")
 
-# Crear los widgets Canvas para mostrar las gráficas
-canvas1 = FigureCanvasTkAgg(fig, master=root)                       #Añade la figura 1 a la ventana principal
-canvas1.draw()
-canvas1.get_tk_widget().grid(row=0, column=0, sticky="nsew")        #Se ajusta la posición de la gráfica en la ventana
-
-canvas2 = FigureCanvasTkAgg(fig2,  master=root)                     #Añade la figura 2 a la ventana principal
-canvas2.draw()
-canvas2.get_tk_widget().grid(row=0, column=1, sticky="nsew")        #Se ajusta la posición de la gráfica en la ventana
-
-#Establece los "pesos" para que se expanda la gráfica
-root.columnconfigure(0, weight=1)
-root.columnconfigure(1, weight=1)
-root.rowconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-root.mainloop()
-root.quit() 
-
+plt.show()
