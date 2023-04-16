@@ -76,7 +76,7 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     area = sum(Cargas_puntuales)
     distancia = np.linspace(xa, xb, Rectangles)
     Qy = integrate.trapz(np.multiply(distancia,Cargas_puntuales), distancia)*elm
-    return Qy , area, a, b, xa, xb, y2, y[0]
+    return Qy , area, xa, xb, y[0]
 
 def Momentos_f(elm,momentums):                                  ##Vector de momentos puntuales       s
     

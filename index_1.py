@@ -4,22 +4,18 @@ import pandas as pd
 from scipy import integrate
 from funtions_1 import *
 from matplotlib.patches import Rectangle
-import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
-df = pd.read_json("vigas_data.json")            # Base de datos de types de vigas
+df = pd.read_json("vigas_data.json")            # Base de datos de tipos de vigas
 Qys = []                                        # Vector para los primeros momentos de area 
 coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
-v_cortantes = []                                # Vector para la los cortantes 
-eitetha = []                                    # V ector para las Pen_refentes ssssss                        
-eideflexiones = []
-maximos = []
-a_g = []                                        #Vector que almacena los limites inferiores            
-b_g = []                                        #Vector que almacena los limites superiores
-xa_g = []                                       #Vector que almacena las primeras posiciones    
-xb_g = []                                       #Vector que almacena las sugundas posiciones
-y2_g = []                                       #Vector que almacena las funciones     
-yE_g = []                                       #Vector que almacena las funciones evaluadas
+v_cortantes = []                                # Vector para las fuerzas cortantes 
+eitetha = []                                    # Vector para la integracion numerica del producto E*I*Theta                       
+eideflexiones = []                              # Vector para la integracion numerica del producto E*I*Y
+
+maximos = []                                    # Maximos valores de las funciones ingresadas
+xa_g = []                                       # Vector que almacena las primeras posiciones    
+xb_g = []                                       # Vector que almacena las sugundas posiciones
 y_axiss = []    
 coordenadas_m = []                              #Vector que almacena las coordenadas de los momentos
 elm = 1000
@@ -58,14 +54,11 @@ while (i==0):                                       # ciclo de ingreso de carga
         coordenadas_p.append(cordenada)             # almacena la carga
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
-        Qy , area, a, b, xa, xb, y2, y_axis = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
+        Qy , area, xa, xb, y_axis = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
         
-        Qys.append(Qy)                                                               # almacena el momento de area
-        a_g.append(a)                                                                # almacena los limites inferiores       
-        b_g.append(b)                                                                # almacena  los limites superiores                   
+        Qys.append(Qy)                                                               # almacena el momento de area                   
         xa_g.append(xa)                                                              # almacena  las posiciones iniciales   
-        xb_g.append(xb)                                                              # almacena  las posiciones finales   
-        y2_g.append(y2)                                                              # almacena  las funciones   
+        xb_g.append(xb)                                                              # almacena  las posiciones finales      
         y_axiss.append(y_axis)
 
     else:                                               # hace parte del menu de usuario
