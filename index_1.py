@@ -8,7 +8,8 @@ from matplotlib.patches import Rectangle
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
 df = pd.read_json("vigas_data.json")            # Base de datos de tipos de vigas
 Qys = []                                        # Vector para los primeros momentos de area 
-coordenadas_p = []                              # Vector para las coordenadas de cargas puntuales
+coordenadas_p = []                              # Vector para las coordenadas de las cargas puntuales
+coordenadas_m = []                              # Vector que almacena las coordenadas de los momentos puntuales
 v_cortantes = []                                # Vector para las fuerzas cortantes 
 eitetha = []                                    # Vector para la integracion numerica del producto E*I*Theta                       
 eideflexiones = []                              # Vector para la integracion numerica del producto E*I*Y
@@ -16,27 +17,26 @@ eideflexiones = []                              # Vector para la integracion num
 maximos = []                                    # Maximos valores de las funciones ingresadas
 xa_g = []                                       # Vector que almacena las primeras posiciones    
 xb_g = []                                       # Vector que almacena las sugundas posiciones
-y_axiss = []    
-coordenadas_m = []                              #Vector que almacena las coordenadas de los momentos
-elm = 1000
-delt = 0.001
+y_axiss = []                                    # Vector que almacena todos los valores de las cargas distribuidas
 
-print('Escoja el type de viga: \n 1. Simplemente apoya\n 2. Empotrada a la izaquierda\n 3. Empotrada a la derecha')
+elm = 1000                                      # Discretizacion del sistema, elementos por unidad
+delt = 0.001                                    # Espacio entre posicion
+
+print('Escoja el tipo de viga: \n1. Simplemente apoyada \n2. Empotrada a la izaquierda \n3. Empotrada a la derecha')
 tipo = input()
 
 print('Ingrese en que sistema va a trabajar')
 print("1. SI    |   2. Ingles")
 sys = input()
 
-print('Ingrese la longitud de la viga:')        # hace parte del menú de usuario
+print('Ingrese la longitud de la viga:')
 L = float(input(""))                            # almacena la longitud de la viga
 LR = np.arange(0 ,L ,delt)                      # crea el eje x del sistema de referencia (vector de posicion)
-Lg = int(L+1)                                   # Longitud de la barra para graficar
 
-Vpc = np.repeat(float(0),len(LR))               # Se almacenan las cargas en cada punto
-momentums = np.repeat(float(0),len(LR))         # Se almacenan los momentos en cada punto 
+Vpc = np.repeat(float(0),len(LR))               # Creacion del vector en el que se almacenan las cargas en cada punto
+momentums = np.repeat(float(0),len(LR))         # Creacion del vector en el que se almacenan los momentos en cada punto 
 
-if (tipo == '1'):
+if (tipo == '1'):                                   # Si la viga es simplemente apoyada
     Aa, Ab = apoyos()                               # Se ingresan los apoyos
 
 # ----------- Menu de ususario ---------------------------------------------------------------------------------------------------------
@@ -52,6 +52,7 @@ while (i==0):                                       # ciclo de ingreso de carga
         Qy , cordenada = Cargas_puntuales_f(Vpc)    # calcula el momento de area e ingresa la cordenada de la carga 
         Qys.append(Qy)                              # almacena el momento de area
         coordenadas_p.append(cordenada)             # almacena la carga
+
 #Cargas distribuidas ---------------------------------------------------------------------------------------------------
     elif n == '2':
         Qy , area, xa, xb, y_axis = Cargas_distribuidas_f(elm , LR , Vpc) # calcula el momento de area y calcula la carga equivalente
@@ -59,7 +60,7 @@ while (i==0):                                       # ciclo de ingreso de carga
         Qys.append(Qy)                                                               # almacena el momento de area                   
         xa_g.append(xa)                                                              # almacena  las posiciones iniciales   
         xb_g.append(xb)                                                              # almacena  las posiciones finales      
-        y_axiss.append(y_axis)
+        y_axiss.append(y_axis)                                                       # almacena todos los valores de la carga distribuida
 
     else:                                               # hace parte del menu de usuario
         print('Por favor ingrese un numero valido')     # "             "
