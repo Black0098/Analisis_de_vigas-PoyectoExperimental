@@ -99,7 +99,7 @@ if (tipo == '1'):
     
 elif (tipo == '2'):
     R = sum(Vpc)
-    M_A = sum(Vpc)*(xel) - sum(momentums)
+    M_A = sum(Vpc)*(xel) - sum(momentums) - momentums[0]
     Vpc = -Vpc
     Vpc[0] += R
     momentums[0] += M_A
@@ -107,7 +107,9 @@ elif (tipo == '2'):
     
 elif (tipo == '3'):
     R = sum(Vpc)
-    M_A = sum(Vpc)*(L-xel) - sum(momentums)
+    M_A = sum(Vpc)*(xel-L) - sum(momentums) - momentums[int(L*elm)-1]
+    print('momento prueba')
+    print(M_A)
     Vpc = -Vpc
     Vpc[int(L*elm)-1] += R
     momentums[int(L*elm)-1] += M_A
