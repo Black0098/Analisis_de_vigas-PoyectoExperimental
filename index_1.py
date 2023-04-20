@@ -201,7 +201,7 @@ ax.add_patch(viga)
 if (tipo == '1'):                                       #graficas viga apoyada
     
     #Cargas puntuales
-    vector_puntual(coordenadas_p, ax,x,y)
+    vector_puntual(coordenadas_p, ax,x,y, L)
            
     #Apoyos
     ax.plot([(Aa*10/L-1), Aa*10/L, (Aa*10/L+1),(Aa*10/L-1)], [-2,-0.3,-2, -2],[(Ab*10/L-1), Ab*10/L, (Ab*10/L+1),(Ab*10/L-1)], [-2,-0.3,-2, -2], color='peru')

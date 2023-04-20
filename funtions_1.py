@@ -205,8 +205,8 @@ def t_viga(sys,df):
         E_i = 1000000
     return E_i
 
-def vector_puntual(coordenadas_p, ax,x,y):
+def vector_puntual(coordenadas_p, ax,x,y,L):
 
     for m in range(len(coordenadas_p)):
         if (coordenadas_p[m]>=0):
-            ax.quiver(coordenadas_p[m], 2, x, y, scale_units='xy', scale=1, color = "g")
+            ax.quiver(coordenadas_p[m]*10/L, 2, x, y, scale_units='xy', scale=1, color = "g")

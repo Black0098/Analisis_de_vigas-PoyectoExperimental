@@ -1,5 +1,5 @@
 [{"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 24x76", "m_inercia": 2100, "mod_young": 29000000},
-{"sistema": "n","material":"n","perfil": "n", "designacion": "n", "m_inercia": 100, "mod_young": 30000000},
+{"sistema": "n","material":"n","perfil": "n", "designacion": "n", "m_inercia": 722, "mod_young": 29000000},
 {"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 24x68", "m_inercia": 1830, "mod_young": 29000000},
 {"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 21x73", "m_inercia": 1600, "mod_young": 29000000},
 {"sistema": "EE.UU","material":"acero","perfil": "W", "designacion": "W 21x57", "m_inercia": 1170, "mod_young": 29000000},
