@@ -22,16 +22,16 @@ y_axiss = []                                    # Vector que almacena todos los 
 elm = 1000                                      # Discretizacion del sistema, elementos por unidad
 delt = 0.001                                    # Espacio entre posicion
 
-print('Escoja el tipo de viga: \n1. Simplemente apoyada \n2. Empotrada a la izaquierda \n3. Empotrada a la derecha')
+print('Escoja el tipo de viga: \n1. Simplemente apoyada \n2. Empotrada a la izquierda \n3. Empotrada a la derecha')
 tipo = input()
 
-print('Ingrese en que sistema va a trabajar')
-print("1. SI    |   2. Ingles")
+print('\nIngrese en que sistema va a trabajar')
+print("1. SI (N - m)   |   2. Ingles (lb - in)")
 sys = input()
 
 print('Ingrese la longitud de la viga:')
-L = float(input(""))                            # almacena la longitud de la viga
-LR = np.arange(0 ,L ,delt)                      # crea el eje x del sistema de referencia (vector de posicion)
+L = float(input(""))                            # Almacena la longitud de la viga
+LR = np.arange(0 ,L ,delt)                      # Crea el eje x del sistema de referencia (vector de posicion)
 
 Vpc = np.repeat(float(0),len(LR))               # Creacion del vector en el que se almacenan las cargas en cada punto
 momentums = np.repeat(float(0),len(LR))         # Creacion del vector en el que se almacenan los momentos en cada punto 
@@ -40,12 +40,16 @@ if (tipo == '1'):                                   # Si la viga es simplemente 
     Aa, Ab = apoyos()                               # Se ingresan los apoyos
 
 # ----------- Menu de ususario ---------------------------------------------------------------------------------------------------------
-i = 0                                               # iterador
-while (i==0):                                       # ciclo de ingreso de carga
-    print('Escoja la carga que quiere aplicar')     # hace parte del menu de usuario
-    print('1. Carga puntual')                       # "             "
-    print('2. Carga distribuida')                   # "             "
-    n = input()                                     # variable de switch 
+i = 0                                               # Iterador
+while (i==0):                                       # Ciclo de ingreso de carga
+    n = '0'                                     # Variable de switch 
+    while((n!='1')&(n!='2')):
+        print('\nEscoja la carga que quiere aplicar')     # Hace parte del menu de usuario
+        print('1. Carga puntual')                       # "             "
+        print('2. Carga distribuida')                   # "             "
+        n = input()
+        if((n!='1')&(n!='2')):
+            print('\nPor favor ingrese un numero valido')
 
 #Cargas puntuales ------------------------------------------------------------------------------------------------------
     if n == '1':
@@ -62,12 +66,14 @@ while (i==0):                                       # ciclo de ingreso de carga
         xb_g.append(xb)                                                              # almacena  las posiciones finales      
         y_axiss.append(y_axis)                                                       # almacena todos los valores de la carga distribuida
 
-    else:                                               # hace parte del menu de usuario
-        print('Por favor ingrese un numero valido')     # "             "
+    r = '0'                                         # variable de switch 
+    while((r!='1')&(r!='2')):
+        print('\nDesea agregar otra carga?')                
+        print('1. Si  |  2. No')                   
+        r = input()
+        if((r!='1')&(r!='2')):
+            print('Por favor ingrese un numero valido')
 
-    print('Desea agregar otra carga?')                  # "             "
-    print('1. Si  |  2. No')                            # "             "
-    r = input()                                         # variable de switch 
     if (r=='1'):                                        # se sale del ciclo de ingreso de carga
         i = 0                                           # "             "
     else:                                               # repite el ciclo de ingreso de carga
@@ -108,7 +114,7 @@ elif (tipo == '2'):
 elif (tipo == '3'):
     R = sum(Vpc)
     M_A = sum(Vpc)*(xel-L) - sum(momentums) - momentums[int(L*elm)-1]
-    print('momento prueba')
+   
     print(M_A)
     Vpc = -Vpc
     Vpc[int(L*elm)-1] += R
@@ -120,10 +126,10 @@ elif (tipo == '3'):
 
 v_cortantes = integrar_num(v_cortantes , Vpc)
 
-# calculo de los momentos flectores ------------
+# Cálculo de los momentos flectores ------------
 m_flectores = np.repeat(float(0),len(Vpc))              # se crea un vector para los momentos cortantes, inicialmente iguales a 0
 
-for t in range(len(Vpc)-1):                             # calculo de los momentos flectores por medio de integración numérica
+for t in range(len(Vpc)-1):                             # calculo de los momentos flectores por medio de integración numérica7
     if(momentums[t]<0):                                 # ingreso de los momentos puntuales por medio de superposicion
         m_flectores[t] -= momentums[t]                  # se incrementa el valor del momento en dicho punto en una cantidad igual a la magnitud del par, si este último tiene un sentido a favor del movimiento de las manecillas del reloj
     else:        

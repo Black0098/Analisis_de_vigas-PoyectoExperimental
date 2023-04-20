@@ -9,24 +9,24 @@ def Xel_total(Qys, Vpc):                                        ##Coordenada del
     Xel= a/b
     return Xel
 
-def apoyos():                                                   ##Apoyos de la barra    sss             
+def apoyos():                                                   ##Apoyos de la barra                 
     print('Ingrese la posicion del primer apoyo:')
     Aa = float(input(""))
     print('Ingrese la posicion del segundo apoyo:')
     Ab = float(input(""))
     return Aa , Ab
 
-def get_interval():                                             ##Intervalo de la funcion            
+def get_interval():                                             ##Intervalo de la función            
     a = float(input("Limite inferior de la función: "))
     b = float(input("Limite superior de la función: "))
     return a, b
 
-def Fun_Position():                                             ##Posicion de la funcion en la viga  
+def Fun_Position():                                             ##Posición de la función en la viga  
     xa = float(input("ingrese la posición donde inicia la carga: "))
     xb = float(input("ingrese la posición donde finaliza la carga: "))
     return xa,xb
 
-def Cargas_puntuales_f(Vpc):                                    ##cargas y primer momento puntual    
+def Cargas_puntuales_f(Vpc):                                    ##Cargas y primer momento puntual    
     cordenada = float(input("ingrese la coordenada en X: "))
     load = float(input("ingrese la carga puntual: "))
     Qy = cordenada * load
@@ -36,7 +36,7 @@ def Cargas_puntuales_f(Vpc):                                    ##cargas y prime
         Vpc[int(cordenada*1000)-1] += load  
     return Qy , cordenada
 
-def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y primer momento distribuido
+def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##Cargas y primer momento distribuido
     
     function_num[0] +=1
     
@@ -78,7 +78,7 @@ def Cargas_distribuidas_f(elm,LR,Vpc , function_num = [0]):     ##cargas y prime
     Qy = integrate.trapz(np.multiply(distancia,Cargas_puntuales), distancia)*elm
     return Qy , area, xa, xb, y[0]
 
-def Momentos_f(elm,momentums):
+def Momentos_f(elm,momentums):                                  ##Vector de momentos en la viga
                                      ##Vector de momentos puntuales       s
     coordenadas_m = []                              #Vector que almacena las coordenadas de los momentos
     ms = []  
@@ -112,7 +112,7 @@ def Momentos_f(elm,momentums):
             i = 1
     return momentums, coordenadas_m, ms
 
-def integrar_num(V_in, V_e):
+def integrar_num(V_in, V_e):                                    ##Integración numérica
     
     V_in = np.repeat(float(0),len(V_e))
     V_in[0] = V_e[0]
@@ -121,7 +121,7 @@ def integrar_num(V_in, V_e):
     
     return V_in
 
-def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):
+def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):          ##Resultados según el sistema
     print("\n \n \n \n \n Resultados \n")
     if type == "1":
         if sys == "1":
@@ -130,7 +130,7 @@ def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):
             print("La reaccion en el segundo apoyo es: {} N".format(R2))
             print("La carga total es: {} N ". format(c_tot))
         elif sys == "2":
-            print("x de elemento: {} ft".format(xel))
+            print("x de elemento: {} in".format(xel))
             print("La reaccion en el primer apoyo es: {} lb".format(R1))
             print("La reaccion en el segundo apoyo es: {} lb".format(R2))
             print("La carga total es: {} lb ". format(c_tot))
@@ -141,7 +141,7 @@ def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):
             print("El momento en A es: {} N·m".format(M_A))
         elif sys =="2":
             print("La reaccion en A es: {} lb".format(R))
-            print("El momento en A es: {} lb·ft".format(M_A))
+            print("El momento en A es: {} lb·in".format(M_A))
 
     elif type == "3":
         if sys == "1":
@@ -149,9 +149,9 @@ def sys_result(type, sys, xel, R1, R2, R, M_A, c_tot):
             print("El momento en B es: {} N·m".format(M_A))
         elif sys =="2":
             print("La reaccion en B es: {} lb".format(R))
-            print("El momento en B es: {} lb·ft".format(M_A))
+            print("El momento en B es: {} lb·in".format(M_A))
 
-def t_viga(sys,df):
+def t_viga(sys,df):                                             ##Tipo de viga
 
     print('Seleccione el  material de la viga y tipo de perfil: \f')
     print('Acero:')
@@ -211,7 +211,7 @@ def t_viga(sys,df):
         E_i = 1000000
     return E_i
 
-def vector_puntual(coordenadas_p, ax,x,y,L):
+def vector_puntual(coordenadas_p, ax,x,y,L):                    ##Gráfica_vector puntual
 
     for m in range(len(coordenadas_p)):
         if (coordenadas_p[m]>=0):
