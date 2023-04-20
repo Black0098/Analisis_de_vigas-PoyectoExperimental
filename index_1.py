@@ -255,11 +255,11 @@ ax.set_axis_off()
 for k in  range(len(coordenadas_m)):
     # Definir los puntos de la flecha
     if (ms[k]>1):
-        x0, y0 = coordenadas_m[k]-1.15, -1.2
-        x1, y1 =  coordenadas_m[k] - 1.15, 1.2
+        x0, y0 = coordenadas_m[k]*(10/L)-1.15, -1.2
+        x1, y1 =  coordenadas_m[k]*(10/L) - 1.15, 1.2
     elif (ms[k]<1):
-        x0, y0 = coordenadas_m[k]+1.15, -1.2
-        x1, y1 =  coordenadas_m[k] + 1.15, 1.2
+        x0, y0 = coordenadas_m[k]*(10/L)+1.15, -1.2
+        x1, y1 =  coordenadas_m[k]*(10/L) + 1.15, 1.2
     
     # Dibujar la flecha recta
     ax.arrow(x0, y0, x1, y1, head_width=0.1, head_length=0.2, fc='none', ec='none')

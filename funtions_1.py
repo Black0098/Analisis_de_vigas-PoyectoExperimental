@@ -163,13 +163,13 @@ def t_viga(sys,df):                                             ##Tipo de viga
 
     if (p == '1'):
         if (sys == '1'):
-            print(df.iloc[0:4, 1:4])
+            print(df.iloc[53:70, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
 
         elif (sys == '2'):
-            print(df.iloc[8:11, 1:4])
+            print(df.iloc[2:20, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
@@ -178,13 +178,13 @@ def t_viga(sys,df):                                             ##Tipo de viga
             E_i = 100000
     elif (p == '2'):#falta
         if (sys == '1'):
-            print(df.iloc[0:4, 1:4])
+            print(df.iloc[86:102, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
 
         elif (sys == '2'):
-            print(df.iloc[8:11, 1:4])
+            print(df.iloc[21:38, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
@@ -193,13 +193,13 @@ def t_viga(sys,df):                                             ##Tipo de viga
             E_i = 100000
     elif (p == '3'):
         if (sys == '1'):
-            print(df.iloc[11:14, 1:4])
+            print(df.iloc[71:85, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
 
         elif (sys == '2'):
-            print(df.iloc[4:8, 1:4])
+            print(df.iloc[39:52, 1:4])
             print('Seleccione la designación de la viga: ')
             d = int(input())
             E_i = (df.iloc[d,4])*(df.iloc[d,5])
