@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import integrate
 from funtions_1 import *
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, FancyArrowPatch
 
 #----------declaración de variables iniciales ------------------------------------------------------------------------------------
 df = pd.read_json("vigas_data.json")            # Base de datos de tipos de vigas
@@ -73,7 +73,7 @@ while (i==0):                                       # ciclo de ingreso de carga
     else:                                               # repite el ciclo de ingreso de carga
         i = 1                                           # "             "
 
-momentums = Momentos_f(elm , momentums)
+momentums, coordenadas_m, ms = Momentos_f(elm , momentums)
 E_i = t_viga(sys,df)
     
 
@@ -214,15 +214,15 @@ elif (tipo == '2'):                                     #graficas viga empotrada
     ax.add_patch(empotrada)
     
     #Cargas puntuales
-    vector_puntual(coordenadas_p, ax,x,y)
+    vector_puntual(coordenadas_p, ax,x,y,L)
 
 elif (tipo == '3'):                                     #graficas viga apoyada der
 
-    empotrada = Rectangle(xy=(10,-(10/6)), height = 6, width= -0.3, edgecolor='lightslategray', facecolor='lightslategray')
+    empotrada = Rectangle(xy=(10,-(10/6)), height = 6, width= 0.3, edgecolor='lightslategray', facecolor='lightslategray')
     ax.add_patch(empotrada)
     
     #Cargas puntuales
-    vector_puntual(coordenadas_p, ax,x,y)
+    vector_puntual(coordenadas_p, ax,x,y,L)
 
 for i in range(len(y_axiss)):
         if ((type(y_axiss[i]) == np.int32)|(type(y_axiss[i]) == np.float32)):
@@ -244,6 +244,31 @@ for i in range(len(y_axiss)):
     ax.plot(xx*10/L, y_axiss[i]*8/maximo, label=f'Function {i+1}') 
     ax.fill_between(xx*10/L, y_axiss[i]*8/maximo, 0, where = y_axiss[i]*8/maximo>0, interpolate = True, alpha=0.2) #Rellena la grafica"""
 ax.set_axis_off()
+
+#Grafico de momentos
+for k in  range(len(coordenadas_m)):
+    # Definir los puntos de la flecha
+    if (ms[k]>1):
+        x0, y0 = coordenadas_m[k]-1.15, -1.2
+        x1, y1 =  coordenadas_m[k] - 1.15, 1.2
+    elif (ms[k]<1):
+        x0, y0 = coordenadas_m[k]+1.15, -1.2
+        x1, y1 =  coordenadas_m[k] + 1.15, 1.2
+    
+    # Dibujar la flecha recta
+    ax.arrow(x0, y0, x1, y1, head_width=0.1, head_length=0.2, fc='none', ec='none')
+    
+    if (ms[k]>1):
+        curvature = 1 # Ajusta el valor para cambiar la curvatura del arco
+
+    elif(ms[k]<1):
+        curvature = -1
+
+    # Dibujar la flecha curvada
+    arrow = FancyArrowPatch((x0, y0), (x1, y1), arrowstyle='->,head_width=0.2,head_length=0.4',
+                            mutation_scale= 10, lw=3, color='darkorchid', alpha=0.7,
+                            connectionstyle=f'arc3,rad={curvature}', zorder=10)
+    ax.add_patch(arrow)
   
 #Diagramas cortantes y flexionantes ---------------------------------------------------------------------------------------------------
 fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
