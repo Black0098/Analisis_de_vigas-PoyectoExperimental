@@ -231,7 +231,7 @@ elif (tipo == '3'):                                     #graficas viga apoyada d
     vector_puntual(coordenadas_p, ax,x,y,L)
 
 for i in range(len(y_axiss)):
-        if ((type(y_axiss[i]) == np.int32)|(type(y_axiss[i]) == np.float32)):
+        if ((type(y_axiss[i]) == np.int32)|(type(y_axiss[i]) == np.float32)|(type(y_axiss[i]) == np.float64)|(type(y_axiss[i]) == np.int64)):
             print(y_axiss[i])
             y_axiss[i] = np.repeat(y_axiss[i],int(abs(xb_g[i]*elm)-xa_g[i]*elm))
             print(y_axiss[i])
