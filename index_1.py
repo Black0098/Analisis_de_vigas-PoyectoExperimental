@@ -236,7 +236,11 @@ if (len(y_axiss)!=0):
     print(maximo)
 
 for i in range(len(y_axiss)):
-    xx = np.arange(xa_g[i], xb_g[i], delt)
+    rec = int(abs(LR[int(xb_g[i]*elm)-1]*elm-LR[int(xa_g[i]*elm)-1]*elm))
+    if xa_g[i] == 0:
+        rec = int(abs(LR[int(xb_g[i]*elm)-1]*elm-LR[int(xa_g[i]*elm)]*elm))+1
+
+    xx = np.linspace(xa_g[i], xb_g[i], rec)
     ax.plot(xx*10/L, y_axiss[i]*8/maximo, label=f'Function {i+1}') 
     ax.fill_between(xx*10/L, y_axiss[i]*8/maximo, 0, where = y_axiss[i]*8/maximo>0, interpolate = True, alpha=0.2) #Rellena la grafica"""
 ax.set_axis_off()
@@ -247,26 +251,37 @@ fig2,((ax1,ax2),(ax3,ax4)) = plt.subplots(2,2)
 ax1.plot(LR, v_cortantes, color = "aquamarine")
 ax1.set_title("Fuerzas cortantes")
 ax1.grid()
-ax1.set_xlabel('x (m)')
-ax1.set_ylabel('V(x) (N)')
 
 ax2.plot(LR, m_flectores, color = "violet")
 ax2.set_title("Momentos flectores")
 ax2.grid()
-ax2.set_xlabel('x (m)')
-ax2.set_ylabel('M(x) (N*m)')
 
 ax3.plot(LR, tetha, color = "red")
 ax3.set_title("Pendientes")
 ax3.grid()
-ax3.set_xlabel('x (m)')
-ax3.set_ylabel('Theta(x) (rad)')
 
 ax4.plot(LR, deflexiones, color = "blue",)
 ax4.set_title("Deflexiones")
 ax4.grid()
-ax4.set_xlabel('x (m)')
-ax4.set_ylabel('Y(x) (m)')
+
+if(sys=='1'):
+    ax1.set_xlabel('x (m)')
+    ax1.set_ylabel('V(x) (N)')
+    ax2.set_xlabel('x (m)')
+    ax2.set_ylabel('M(x) (N*m)')
+    ax3.set_xlabel('x (m)')
+    ax3.set_ylabel('Theta(x) (rad)')
+    ax4.set_xlabel('x (m)')
+    ax4.set_ylabel('Y(x) (m)')
+elif(sys=='2'):
+    ax1.set_xlabel('x (in)')
+    ax1.set_ylabel('V(x) (lb)')
+    ax2.set_xlabel('x (in)')
+    ax2.set_ylabel('M(x) (lb*in)')
+    ax3.set_xlabel('x (in)')
+    ax3.set_ylabel('Theta(x) (rad)')
+    ax4.set_xlabel('x (in)')
+    ax4.set_ylabel('Y(x) (in)')
 
 plt.tight_layout()
 plt.show()
