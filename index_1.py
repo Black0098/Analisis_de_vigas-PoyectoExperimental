@@ -238,14 +238,11 @@ for i in range(len(y_axiss)):
         maximos.append(max(y_axiss[i]))
 if (len(y_axiss)!=0): 
     maximo = max(maximos)
-    print('maximo')
-    print(maximo)
 
 for i in range(len(y_axiss)):
-    rec = int(abs(LR[int(xb_g[i]*elm)-1]*elm-LR[int(xa_g[i]*elm)-1]*elm))
-    if xa_g[i] == 0:
-        rec = int(abs(LR[int(xb_g[i]*elm)-1]*elm-LR[int(xa_g[i]*elm)]*elm))+1
-
+    # Se resuelve el error de aproximacion debido a la discretizacion
+    rec = int(abs(xb_g[i]*elm-xa_g[i]*elm))
+    #
     xx = np.linspace(xa_g[i], xb_g[i], rec)
     ax.plot(xx*10/L, y_axiss[i]*8/maximo, label=f'Function {i+1}') 
     ax.fill_between(xx*10/L, y_axiss[i]*8/maximo, 0, where = y_axiss[i]*8/maximo>0, interpolate = True, alpha=0.2) #Rellena la grafica"""
